@@ -146,10 +146,10 @@ if __name__ == '__main__':
 
     parser.add_argument('--id', default='id',
                         help='CSV column to create shapes for (e.g. branchname)')
-    parser.add_argument('--lat', default='lat', help='Latitude column in points CSV file')
-    parser.add_argument('--lng', default='lng', help='Longitude column in points CSV file')
+    parser.add_argument('--lat', default='latitude', help='Latitude column in points CSV file')
+    parser.add_argument('--lng', default='longitude', help='Longitude column in points CSV file')
 
     args = parser.parse_args()
 
     points_data = pd.read_csv(args.points, encoding='cp1252')
-    main(args.input, points_data, args.output, 'cluster', 'latitude', 'longitude')
+    main(args.input, points_data, args.output, args.id, args.latitude, args.longitude)
