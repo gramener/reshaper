@@ -35,7 +35,12 @@ The program splits and re-combines shapes based the following logic:
 The output shapefile has an `id` column holding the `--id` value.
 
 
-## Building
+## Release
+
+Change the `"version"` in `setup.py` to `"x.x.x"`, commit and tag:
+
+    git commit . -m"Describe features / bug fixes"
+    git tag -a vx.x.x -m"one-line summary of release"
 
 To [distribute](https://packaging.python.org/en/latest/distributing.html), run:
 

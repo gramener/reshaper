@@ -125,7 +125,7 @@ def main(infile, points, outfile, group, lat='latitude', lon='longitude'):
             geom = geom.Union(geometry)
         feature = ogr.Feature(feature_defn)
         feature.SetGeometry(geom)
-        feature.SetField('id', group)
+        feature.SetField('id', str(group))
         out_layer.CreateFeature(feature)
 
     data_source.Destroy()

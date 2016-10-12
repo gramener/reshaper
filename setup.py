@@ -12,7 +12,7 @@ kwargs = {
     "url": "https://github.com/gramener/reshaper",
     "author": "Gramener",
     "author_email": "s.anand@gramener.com",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "py_modules": ["reshaper"],
     "install_requires": ["pandas", "scipy", "tqdm", "GDAL"],
     "entry_points": {
