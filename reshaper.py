@@ -9,6 +9,7 @@ Setup:
 '''
 import os
 import logging
+import argparse
 import pandas as pd
 import scipy.spatial
 from tqdm import trange
@@ -131,13 +132,11 @@ def main(infile, points, outfile, group, lat='latitude', lon='longitude'):
     logging.info('Created %s', outfile)
 
 
-if __name__ == '__main__':
-    import argparse
-
+def cmdline():
     logging.basicConfig(level=logging.INFO)
 
     parser = argparse.ArgumentParser(
-        description=__doc__.strip().split()[0],                     # First line of the docstring
+        description=__doc__.strip().splitlines()[0],                # First line of the docstring
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,     # Print default values
     )
     parser.add_argument('input', help='input shape file')
@@ -153,3 +152,7 @@ if __name__ == '__main__':
 
     points_data = pd.read_csv(args.points, encoding='cp1252')
     main(args.input, points_data, args.output, args.id, args.lat, args.lng)
+
+
+if __name__ == '__main__':
+    cmdline()
