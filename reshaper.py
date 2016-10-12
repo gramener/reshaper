@@ -152,4 +152,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     points_data = pd.read_csv(args.points, encoding='cp1252')
-    main(args.input, points_data, args.output, args.id, args.latitude, args.longitude)
+    main(args.input, points_data, args.output, args.id, args.lat, args.lng)
