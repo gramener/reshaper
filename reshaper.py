@@ -5,8 +5,8 @@ Setup:
 
     # Install the GDAL library to process shapefiles
     conda install gdal
-
 '''
+
 import os
 import logging
 import argparse
@@ -125,7 +125,7 @@ def main(infile, points, outfile, group, lat='latitude', lon='longitude'):
             geom = geom.Union(geometry)
         feature = ogr.Feature(feature_defn)
         feature.SetGeometry(geom)
-        feature.SetField('id', str(group))
+        feature.SetField('id', str(group))      # noqa - allow use of str()
         out_layer.CreateFeature(feature)
 
     data_source.Destroy()

@@ -1,12 +1,5 @@
 # Ignore input / output shapefiles / data files
-
-*.shp
-*.dbf
-*.shx
-*.prj
-*.sbn
-*.sbx
-*.csv
+maps/
 
 # Ignore python artefacts
 *.py[codx]
