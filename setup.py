@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
+import io
 from setuptools import setup
-import reshaper
 
-long_description = reshaper.__doc__.strip()
+with io.open('README.md', encoding='utf-8') as handle:
+    long_description = handle.read()
 
 kwargs = {
     "name": "reshaper",
@@ -12,7 +13,7 @@ kwargs = {
     "url": "https://github.com/gramener/reshaper",
     "author": "Gramener",
     "author_email": "s.anand@gramener.com",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "py_modules": ["reshaper"],
     "install_requires": ["pandas", "scipy", "tqdm", "GDAL"],
     "entry_points": {
@@ -28,7 +29,7 @@ kwargs = {
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5"
+        "Programming Language :: Python :: 3.6"
     ]
 }
 

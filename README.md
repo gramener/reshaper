@@ -4,6 +4,7 @@ Splits and recombines shapefiles based on lat-long data.
 
 ## Installation
 
+    conda install -c conda-forge gdal
     pip install reshaper
 
 ## Usage
