@@ -47,7 +47,7 @@ def split(geometry, coords):
         yield geometry.Intersection(poly)
 
 
-def main(infile, points, outfile, group, lat='latitude', lon='longitude'):
+def main(infile, points, outfile, group, cols, lat='latitude', lon='longitude'):
     driver = ogr.GetDriverByName('ESRI Shapefile')
     shape = driver.Open(infile)
     # shape = driver.Open('Export_Output_2.shp')
@@ -55,6 +55,7 @@ def main(infile, points, outfile, group, lat='latitude', lon='longitude'):
 
     # If any of the groups are not present, ignore those rows
     points = points.dropna(subset=[group])
+    lookup = points.set_index(group)
 
     logging.info('Get centroids of features to locate nearest feature...')
     feature_coords = []
@@ -115,8 +116,10 @@ def main(infile, points, outfile, group, lat='latitude', lon='longitude'):
     data_source = driver.CreateDataSource(outfile)
     out_layer = data_source.CreateLayer('target', geom_type=ogr.wkbPolygon)
     feature_defn = out_layer.GetLayerDefn()
-    id_field = ogr.FieldDefn('id', ogr.OFTString)
-    out_layer.CreateField(id_field)
+    for col in ['id'] + cols:
+        # TODO: use the inferred type. Don't use string for everything
+        field = ogr.FieldDefn(col, ogr.OFTString)
+        out_layer.CreateField(field)
     groups = list(target.keys())
     for index in trange(len(groups)):
         group = groups[index]
@@ -127,6 +130,8 @@ def main(infile, points, outfile, group, lat='latitude', lon='longitude'):
         feature = ogr.Feature(feature_defn)
         feature.SetGeometry(geom)
         feature.SetField('id', six.text_type(group))
+        for col in cols:
+            feature.SetField(col, lookup[col][group])
         out_layer.CreateFeature(feature)
 
     data_source.Destroy()
@@ -146,13 +151,14 @@ def cmdline():
 
     parser.add_argument('--id', default='id',
                         help='CSV column to create shapes for (e.g. branchname)')
+    parser.add_argument('--col', nargs='*', default=[], help='Additional columns to add')
     parser.add_argument('--lat', default='latitude', help='Latitude column in points CSV file')
     parser.add_argument('--lng', default='longitude', help='Longitude column in points CSV file')
 
     args = parser.parse_args()
 
     points_data = pd.read_csv(args.points, encoding='cp1252')
-    main(args.input, points_data, args.output, args.id, args.lat, args.lng)
+    main(args.input, points_data, args.output, args.id, args.col, args.lat, args.lng)
 
 
 if __name__ == '__main__':
