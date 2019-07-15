@@ -7,7 +7,7 @@ import logging
 import argparse
 import pandas as pd
 import scipy.spatial
-from tqdm import trange
+from tqdm import trange, tqdm
 from osgeo import ogr
 from collections import defaultdict, Counter
 
@@ -24,6 +24,11 @@ def find_feature(layer, lng, lat):
 
 
 def split(geometry, coords):
+    coords_count = Counter((x, y) for x, y in coords)
+    duplicate_coords = len(coords_count) - len(coords)
+    if duplicate_coords > 0:
+        logging.warn('%d duplicate coords', duplicate_coords)
+
     # Add points at infinity
     m = max(abs(coords.max()), abs(coords.min())) * 1000
     inf_coords = pd.np.append(coords, [[m, m], [m, -m], [-m, -m], [-m, m]], axis=0)
@@ -119,13 +124,14 @@ def main(infile, points, outfile, group, cols, lat='latitude', lon='longitude'):
         group = groups[index]
         geometries = target[group]
         geom = geometries[0]
-        for geometry in geometries[1:]:
+        for geometry in tqdm(geometries[1:]):
             geom = geom.Union(geometry)
         feature = ogr.Feature(feature_defn)
         feature.SetGeometry(geom)
         feature.SetField('id', six.text_type(group))
         for col in cols:
-            feature.SetField(col, lookup[col][group])
+            # TODO: When the field definition uses the inferred type, remove str() below
+            feature.SetField(col, str(lookup[col][group]))  # noqa
         out_layer.CreateFeature(feature)
 
     data_source.Destroy()
